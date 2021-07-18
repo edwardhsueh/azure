@@ -1,0 +1,512 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaults_EdwardDotNetKeyValut_name": {
+            "defaultValue": "EdwardDotNetKeyValut",
+            "type": "String"
+        },
+        "sshPublicKeys_edwardDotnetLearningSSH_name": {
+            "defaultValue": "edwardDotnetLearningSSH",
+            "type": "String"
+        },
+        "virtualMachines_edwardDotnetLearningVM_name": {
+            "defaultValue": "edwardDotnetLearningVM",
+            "type": "String"
+        },
+        "networkInterfaces_edwarddotnetlearning844_name": {
+            "defaultValue": "edwarddotnetlearning844",
+            "type": "String"
+        },
+        "virtualNetworks_EdwardDotNetLearning_vnet_name": {
+            "defaultValue": "EdwardDotNetLearning-vnet",
+            "type": "String"
+        },
+        "publicIPAddresses_edwardDotnetLearningVM_ip_name": {
+            "defaultValue": "edwardDotnetLearningVM-ip",
+            "type": "String"
+        },
+        "networkSecurityGroups_edwardDotnetLearningVM_nsg_name": {
+            "defaultValue": "edwardDotnetLearningVM-nsg",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/sshPublicKeys",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('sshPublicKeys_edwardDotnetLearningSSH_name')]",
+            "location": "eastasia",
+            "properties": {
+                "publicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwLI9zQsxbJ3OCqWbqY4UNDhI9\r\n0kgDOpcZTA1QTaGcU/VM0CMMUCSZYZ+LDC206xhIp0fbG+DKiNC4kcK8tDu0qulj\r\nu9QnGMztPtc2JdnCo4e6CYvULAcp2hDqzB19JTKLa4UppHeVO+nex/gpfgpuEQVK\r\napMew7oAmbl4qNHssFL+Bhpt0eHjKiuGygnhLLCUGXC/p5qFGpQFLWfW6WWLmEpD\r\np3QjOEz2+gaPdyRPIX4cPGcRAS3I1v4iwikAwaA7YordBBBphDvEB9om7aGArNuW\r\n/6aB9BkItgLKtewBK9uBe9qDxDI6/aPvqhTkankaFPREkOJxBek37XeF3+nHwvGu\r\nd4/+8HK1eYhU1XVtnFeQnWVTpRpZCaLafDUBluG1q8ayv3bia9LVdE+sQZVQJ+hs\r\n5nL2IJ60hwX7U0JAk8b7UllpnMQDF6z0UHsP5gbINLTtn4TqDEWODDYMxAcL7bfM\r\ngBVvz7QZmZR+RjSVqsV5uZkDgj63Zr6qvZ+CMMU= generated-by-azure\r\n"
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2021-04-01-preview",
+            "name": "[parameters('vaults_EdwardDotNetKeyValut_name')]",
+            "location": "eastasia",
+            "properties": {
+                "sku": {
+                    "family": "A",
+                    "name": "Standard"
+                },
+                "tenantId": "f60d6fff-97e3-47cd-9593-53f83272e2e6",
+                "accessPolicies": [
+                    {
+                        "tenantId": "f60d6fff-97e3-47cd-9593-53f83272e2e6",
+                        "objectId": "8ef6a6f1-4274-4dd4-ae7f-8907f1e07826",
+                        "permissions": {
+                            "keys": [
+                                "Get",
+                                "List",
+                                "Update",
+                                "Create",
+                                "Import",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore"
+                            ],
+                            "secrets": [
+                                "Get",
+                                "List",
+                                "Set",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore"
+                            ],
+                            "certificates": [
+                                "Get",
+                                "List",
+                                "Update",
+                                "Create",
+                                "Import",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore",
+                                "ManageContacts",
+                                "ManageIssuers",
+                                "GetIssuers",
+                                "ListIssuers",
+                                "SetIssuers",
+                                "DeleteIssuers"
+                            ]
+                        }
+                    }
+                ],
+                "enabledForDeployment": true,
+                "enabledForDiskEncryption": true,
+                "enabledForTemplateDeployment": true,
+                "enableSoftDelete": true,
+                "softDeleteRetentionInDays": 90,
+                "enableRbacAuthorization": false,
+                "vaultUri": "https://edwarddotnetkeyvalut.vault.azure.net/",
+                "provisioningState": "Succeeded"
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('networkSecurityGroups_edwardDotnetLearningVM_nsg_name')]",
+            "location": "eastasia",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "SSH",
+                        "properties": {
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "22",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 300,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "Port_8080",
+                        "properties": {
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "80",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 310,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "Port_HTTPS",
+                        "properties": {
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "443",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 320,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "Port_5000",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "5000-5001",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 330,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('publicIPAddresses_edwardDotnetLearningVM_ip_name')]",
+            "location": "eastasia",
+            "sku": {
+                "name": "Basic",
+                "tier": "Regional"
+            },
+            "properties": {
+                "ipAddress": "23.101.2.219",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "dnsSettings": {
+                    "domainNameLabel": "edwarddotnetvm",
+                    "fqdn": "edwarddotnetvm.eastasia.cloudapp.azure.com"
+                },
+                "ipTags": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('virtualNetworks_EdwardDotNetLearning_vnet_name')]",
+            "location": "eastasia",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "default",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/24",
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('virtualMachines_edwardDotnetLearningVM_name')]",
+            "location": "eastasia",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_edwarddotnetlearning844_name'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_B2s"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "canonical",
+                        "offer": "0001-com-ubuntu-server-focal",
+                        "sku": "20_04-lts",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_edwardDotnetLearningVM_name'), '_OsDisk_1_cff86d9cf83c493bbbf0fdd73d9e6c29')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_edwardDotnetLearningVM_name'), '_OsDisk_1_cff86d9cf83c493bbbf0fdd73d9e6c29'))]"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_edwardDotnetLearningVM_name')]",
+                    "adminUsername": "azureuser",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "/home/azureuser/.ssh/authorized_keys",
+                                    "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwLI9zQsxbJ3OCqWbqY4UNDhI9\r\n0kgDOpcZTA1QTaGcU/VM0CMMUCSZYZ+LDC206xhIp0fbG+DKiNC4kcK8tDu0qulj\r\nu9QnGMztPtc2JdnCo4e6CYvULAcp2hDqzB19JTKLa4UppHeVO+nex/gpfgpuEQVK\r\napMew7oAmbl4qNHssFL+Bhpt0eHjKiuGygnhLLCUGXC/p5qFGpQFLWfW6WWLmEpD\r\np3QjOEz2+gaPdyRPIX4cPGcRAS3I1v4iwikAwaA7YordBBBphDvEB9om7aGArNuW\r\n/6aB9BkItgLKtewBK9uBe9qDxDI6/aPvqhTkankaFPREkOJxBek37XeF3+nHwvGu\r\nd4/+8HK1eYhU1XVtnFeQnWVTpRpZCaLafDUBluG1q8ayv3bia9LVdE+sQZVQJ+hs\r\n5nL2IJ60hwX7U0JAk8b7UllpnMQDF6z0UHsP5gbINLTtn4TqDEWODDYMxAcL7bfM\r\ngBVvz7QZmZR+RjSVqsV5uZkDgj63Zr6qvZ+CMMU= generated-by-azure\r\n"
+                                }
+                            ]
+                        },
+                        "provisionVMAgent": true,
+                        "patchSettings": {
+                            "patchMode": "ImageDefault",
+                            "assessmentMode": "ImageDefault"
+                        }
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_edwarddotnetlearning844_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2021-04-01-preview",
+            "name": "[concat(parameters('vaults_EdwardDotNetKeyValut_name'), '/Authentication--Facebook--AppId')]",
+            "location": "eastasia",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_EdwardDotNetKeyValut_name'))]"
+            ],
+            "tags": {
+                "file-encoding": "utf-8"
+            },
+            "properties": {
+                "attributes": {
+                    "enabled": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2021-04-01-preview",
+            "name": "[concat(parameters('vaults_EdwardDotNetKeyValut_name'), '/Authentication--Facebook--AppSecret')]",
+            "location": "eastasia",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_EdwardDotNetKeyValut_name'))]"
+            ],
+            "tags": {
+                "file-encoding": "utf-8"
+            },
+            "properties": {
+                "attributes": {
+                    "enabled": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2021-04-01-preview",
+            "name": "[concat(parameters('vaults_EdwardDotNetKeyValut_name'), '/Authentication--Google--ClientId')]",
+            "location": "eastasia",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_EdwardDotNetKeyValut_name'))]"
+            ],
+            "tags": {
+                "file-encoding": "utf-8"
+            },
+            "properties": {
+                "attributes": {
+                    "enabled": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2021-04-01-preview",
+            "name": "[concat(parameters('vaults_EdwardDotNetKeyValut_name'), '/Authentication--Google--ClientSecret')]",
+            "location": "eastasia",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_EdwardDotNetKeyValut_name'))]"
+            ],
+            "tags": {
+                "file-encoding": "utf-8"
+            },
+            "properties": {
+                "attributes": {
+                    "enabled": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('networkSecurityGroups_edwardDotnetLearningVM_nsg_name'), '/Port_5000')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_edwardDotnetLearningVM_nsg_name'))]"
+            ],
+            "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "5000-5001",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 330,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('networkSecurityGroups_edwardDotnetLearningVM_nsg_name'), '/Port_8080')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_edwardDotnetLearningVM_nsg_name'))]"
+            ],
+            "properties": {
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 310,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('networkSecurityGroups_edwardDotnetLearningVM_nsg_name'), '/Port_HTTPS')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_edwardDotnetLearningVM_nsg_name'))]"
+            ],
+            "properties": {
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 320,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('networkSecurityGroups_edwardDotnetLearningVM_nsg_name'), '/SSH')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_edwardDotnetLearningVM_nsg_name'))]"
+            ],
+            "properties": {
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 300,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('virtualNetworks_EdwardDotNetLearning_vnet_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_EdwardDotNetLearning_vnet_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('networkInterfaces_edwarddotnetlearning844_name')]",
+            "location": "eastasia",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_edwardDotnetLearningVM_ip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_EdwardDotNetLearning_vnet_name'), 'default')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_edwardDotnetLearningVM_nsg_name'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.0.0.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_edwardDotnetLearningVM_ip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_EdwardDotNetLearning_vnet_name'), 'default')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_edwardDotnetLearningVM_nsg_name'))]"
+                }
+            }
+        }
+    ]
+}

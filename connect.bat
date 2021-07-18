@@ -1,0 +1,1 @@
+ssh -i C:\Users\edward\.ssh\edwardDotnetLearningSSH.pem azureuser@23.101.2.219
