@@ -1,2 +1,0 @@
-# azure
-for azure

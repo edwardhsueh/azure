@@ -1,1 +1,0 @@
-New-SelfSignedCertificate -DnsName "edwarddotnetvm.eastasia.cloudapp.azure.com"
